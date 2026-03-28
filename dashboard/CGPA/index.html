@@ -3,47 +3,106 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CGPA Calculator</title>
+    <title>CGPA Calculator - VIConnect</title>
     <link rel="stylesheet" href="Styles.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="/transitions.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="/transitions.js" defer></script>
     <script src="script.js" defer></script>
 </head>
 <body>
     <div class="back-button">
-        <a href="/dashboard" onclick="goBack(); return false;">
-            <i class="fas fa-chevron-left"></i> Back 
+        <a href="/dashboard">
+            <i class="fas fa-chevron-left"></i> Back
         </a>
     </div>
 
     <div class="main-content">
-        <div class="header">
-            <img src="logo.png" alt="VIConnect Logo" class="logo">
-            <h1>VIConnect</h1>
+        <div class="page-header">
+            <i class="fas fa-calculator header-icon"></i>
+            <h1>CGPA Calculator</h1>
+            <p>Calculate your cumulative GPA and track progress</p>
         </div>
-        <div class="calculator-box">
-            <h2>CGPA Calculator</h2>
-            <form id="cgpaForm">
-                <label for="currentCgpa">Current CGPA:</label>
-                <input type="number" id="currentCgpa" step="0.01" placeholder="Enter Value..." required>
 
-                <label for="creditsDone">Number of credits done:</label>
-                <input type="number" id="creditsDone" step="0.01" placeholder="Enter Value..." required>
+        <div class="cards-container">
+            <!-- Main Calculator -->
+            <div class="calculator-box">
+                <h2><i class="fas fa-chart-line"></i> Calculate CGPA</h2>
+                <form id="cgpaForm">
+                    <div class="form-group">
+                        <label for="currentCgpa"><i class="fas fa-star"></i> Current CGPA</label>
+                        <input type="number" id="currentCgpa" step="0.01" min="0" max="10" placeholder="e.g., 8.5" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="creditsDone"><i class="fas fa-book"></i> Credits Completed</label>
+                        <input type="number" id="creditsDone" step="1" min="0" placeholder="e.g., 60" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="currentGpa"><i class="fas fa-chart-bar"></i> Current Semester GPA</label>
+                        <input type="number" id="currentGpa" step="0.01" min="0" max="10" placeholder="e.g., 9.0" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="semesterCredits"><i class="fas fa-graduation-cap"></i> Semester Credits</label>
+                        <input type="number" id="semesterCredits" step="1" min="0" placeholder="e.g., 23" required>
+                    </div>
 
-                <label for="currentGpa">Current semester GPA:</label>
-                <input type="number" id="currentGpa" step="0.01" placeholder="Enter Value..." required>
+                    <div class="result-display" id="resultDisplay">
+                        <div class="cgpa-gauge">
+                            <svg viewBox="0 0 120 120" class="gauge-svg">
+                                <circle cx="60" cy="60" r="50" class="gauge-bg"></circle>
+                                <circle cx="60" cy="60" r="50" class="gauge-fill" id="gaugeFill" stroke-dasharray="0 314"></circle>
+                            </svg>
+                            <div class="gauge-value">
+                                <span id="totalCgpa">0.00</span>
+                                <small>CGPA</small>
+                            </div>
+                        </div>
+                        <div class="result-details">
+                            <div class="detail-row">
+                                <span>Total Credits</span>
+                                <strong id="totalCredits">—</strong>
+                            </div>
+                            <div class="detail-row">
+                                <span>Change</span>
+                                <strong id="cgpaChange">—</strong>
+                            </div>
+                        </div>
+                    </div>
 
-                <label for="semesterCredits">Current semester credits:</label>
-                <input type="number" id="semesterCredits" step="0.01" placeholder="Enter Value..." required>
+                    <div class="buttons">
+                        <button type="reset" id="resetButton"><i class="fas fa-redo"></i> Reset</button>
+                        <button type="submit" id="submitButton"><i class="fas fa-calculator"></i> Calculate</button>
+                    </div>
+                </form>
+            </div>
 
-                <div class="result">
-                    <p>Total CGPA: <span id="totalCgpa">0.0</span></p>
+            <!-- Grade Reference -->
+            <div class="reference-box">
+                <h2><i class="fas fa-table"></i> VIT Grade Scale</h2>
+                <table class="grade-table">
+                    <thead>
+                        <tr><th>Grade</th><th>Points</th><th>Marks</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><span class="grade-badge s">S</span></td><td>10</td><td>90-100</td></tr>
+                        <tr><td><span class="grade-badge a">A</span></td><td>9</td><td>80-89</td></tr>
+                        <tr><td><span class="grade-badge b">B</span></td><td>8</td><td>70-79</td></tr>
+                        <tr><td><span class="grade-badge c">C</span></td><td>7</td><td>60-69</td></tr>
+                        <tr><td><span class="grade-badge d">D</span></td><td>6</td><td>55-59</td></tr>
+                        <tr><td><span class="grade-badge e">E</span></td><td>5</td><td>50-54</td></tr>
+                        <tr><td><span class="grade-badge f">F</span></td><td>0</td><td>0-49</td></tr>
+                    </tbody>
+                </table>
+
+                <h3 style="margin-top:20px;"><i class="fas fa-bullseye"></i> Target GPA Finder</h3>
+                <div class="form-group" style="margin-top:10px;">
+                    <label for="targetCgpa"><i class="fas fa-flag"></i> Desired CGPA</label>
+                    <input type="number" id="targetCgpa" step="0.01" min="0" max="10" placeholder="e.g., 9.0">
                 </div>
-
-                <div class="buttons">
-                    <button type="reset" id="resetButton">RESET</button>
-                    <button type="submit" id="submitButton">SUBMIT</button>
-                </div>
-            </form>
+                <div id="targetResult" class="target-result"></div>
+                <button type="button" onclick="calculateTarget()" class="target-btn"><i class="fas fa-crosshairs"></i> Find Required GPA</button>
+            </div>
         </div>
     </div>
 </body>

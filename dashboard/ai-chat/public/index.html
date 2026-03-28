@@ -3,12 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VIConnect Chatbot</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <title>VIConnect AI Assistant</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="/transitions.css">
+    <script src="/transitions.js" defer></script>
 </head>
 <body>
-    <!-- Add back button -->
+    <!-- Back button -->
     <div class="back-button">
         <a href="/dashboard" class="back-to-dashboard">
             <i class="fas fa-chevron-left"></i>
@@ -16,24 +19,59 @@
         </a>
     </div>
 
-    <!-- Header with static logo and name -->
+    <!-- Header -->
     <header>
-        <img src="logo.png" alt="VIConnect Logo" class="logo">
-        <h1>VIConnect Chatbot</h1>
+        <div class="header-content">
+            <div class="header-left">
+                <div class="ai-avatar">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <div class="header-info">
+                    <h1>VIConnect AI</h1>
+                    <span class="status-badge"><span class="status-dot"></span> Online</span>
+                </div>
+            </div>
+        </div>
     </header>
 
-    <!-- Chat box for messages -->
-    <div class="chat-box" id="chatBox"></div>
+    <!-- Chat box -->
+    <div class="chat-box" id="chatBox">
+        <!-- Welcome message -->
+        <div class="welcome-container" id="welcomeContainer">
+            <div class="welcome-icon"><i class="fas fa-graduation-cap"></i></div>
+            <h2>Welcome to VIConnect AI</h2>
+            <p>Your intelligent campus assistant. Ask me anything about VIT!</p>
+            <div class="suggested-prompts">
+                <button class="prompt-btn" onclick="useSuggestion('What are the hostel facilities at VIT?')">
+                    <i class="fas fa-building"></i> Hostel facilities
+                </button>
+                <button class="prompt-btn" onclick="useSuggestion('How to calculate CGPA at VIT?')">
+                    <i class="fas fa-calculator"></i> CGPA calculation
+                </button>
+                <button class="prompt-btn" onclick="useSuggestion('What sports are available at VIT Vellore?')">
+                    <i class="fas fa-trophy"></i> Sports at VIT
+                </button>
+                <button class="prompt-btn" onclick="useSuggestion('Tell me about VIT Vellore campus life')">
+                    <i class="fas fa-university"></i> Campus life
+                </button>
+            </div>
+        </div>
+    </div>
 
-    <!-- Input area for user messages -->
+    <!-- Input area -->
     <div class="input-area">
-        <input 
-            type="text" 
-            id="userInput" 
-            placeholder="Type your message..." 
-            autocomplete="off"
-        >
-        <button onclick="sendMessage()">Send</button>
+        <div class="input-container">
+            <input 
+                type="text" 
+                id="userInput" 
+                placeholder="Ask me anything about VIT..." 
+                autocomplete="off"
+            >
+            <button onclick="sendMessage()" id="sendBtn">
+                <i class="fas fa-paper-plane"></i>
+            </button>
+        </div>
+        <p class="disclaimer">AI responses may not always be accurate. Verify important information.</p>
     </div>
 
     <script src="script.js"></script>

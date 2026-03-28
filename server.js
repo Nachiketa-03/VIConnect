@@ -9,22 +9,23 @@ const { GoogleGenerativeAI } = require('@google/generative-ai');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const { OAuth2Client } = require('google-auth-library');
-const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 const rateLimit = require('express-rate-limit');
 
 dotenv.config();
+
+const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Middleware
 app.use(cors());
-app.use(bodyParser.json());
+app.use(bodyParser.json({ limit: '10mb' }));
 app.use(express.static('public'));
 app.use('/dashboard', express.static(path.join(__dirname, 'dashboard')));
 
 // MongoDB Connection
-mongoose.connect('mongodb://127.0.0.1:27017/PROJECT1')
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/PROJECT1')
     .then(() => console.log('Connected to MongoDB: PROJECT1'))
     .catch(err => console.error('MongoDB connection error:', err));
 
@@ -32,8 +33,7 @@ mongoose.connect('mongodb://127.0.0.1:27017/PROJECT1')
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 const model = genAI.getGenerativeModel({ model: "gemini-pro" });
 
-// Add this debug line to check if the API key is loaded
-console.log('Gemini API Key loaded:', process.env.GEMINI_API_KEY ? 'Yes' : 'No');
+
 
 // User Schema
 const userSchema = new mongoose.Schema({
@@ -46,6 +46,26 @@ const userSchema = new mongoose.Schema({
 });
 
 const User = mongoose.model('User', userSchema);
+
+// Community Forum Post Schema
+const postSchema = new mongoose.Schema({
+    author:      { type: String, required: true },
+    authorEmail: { type: String, required: true },
+    authorPic:   { type: String, default: '' },
+    content:     { type: String, required: true },
+    category:    { type: String, default: 'General' },
+    likes:       [{ type: String }],               // array of emails
+    comments:    [{
+        author:      String,
+        authorEmail: String,
+        authorPic:   String,
+        text:        String,
+        createdAt:   { type: Date, default: Date.now }
+    }],
+    createdAt:   { type: Date, default: Date.now }
+});
+
+const Post = mongoose.model('Post', postSchema);
 
 // Instead, import the model
 const ResetToken = require('./models/resetToken');
@@ -62,37 +82,10 @@ const transporter = nodemailer.createTransport({
     }
 });
 
-// Simple test function
-async function testEmailConfig() {
-    try {
-        await transporter.verify();
-        console.log('Email configuration is valid');
-        
-        // Send test email
-        const info = await transporter.sendMail({
-            from: `"VIT Connect" <${process.env.EMAIL_USER}>`,
-            to: process.env.EMAIL_USER,
-            subject: "Test Email",
-            text: "If you receive this email, the configuration is working.",
-            html: "<b>If you receive this email, the configuration is working.</b>"
-        });
-        
-        console.log('Test email sent:', info.messageId);
-    } catch (error) {
-        console.error('Email configuration error:', error);
-        
-        // Log specific error details
-        if (error.code === 'EAUTH') {
-            console.error('Authentication failed. Please check:');
-            console.error('1. Email address is correct');
-            console.error('2. App password is correct (no spaces)');
-            console.error('3. 2-Step Verification is enabled');
-        }
-    }
-}
-
-// Test the configuration immediately
-testEmailConfig();
+// Verify email configuration on startup (no test email)
+transporter.verify()
+    .then(() => console.log('Email server ready'))
+    .catch(err => console.error('Email config error:', err.message));
 
 // Helper function for sending emails with device info
 async function sendEmail(to, subject, htmlContent) {
@@ -132,29 +125,7 @@ async function sendEmail(to, subject, htmlContent) {
     }
 }
 
-// Test the configuration
-transporter.verify((error, success) => {
-    if (error) {
-        console.error('Email configuration error:', error);
-    } else {
-        console.log('Email server is ready to send messages');
-        
-        // Send a test email with device info
-        sendEmail(
-            process.env.EMAIL_USER,
-            'VIT Connect - Email Configuration Test',
-            `
-                <h2 style="color: #6200ea;">Email Configuration Test</h2>
-                <p>This is a test email from VIT Connect to verify the email configuration.</p>
-                <p>Your email setup is working correctly!</p>
-            `
-        ).then(() => {
-            console.log('Test email sent with device details');
-        }).catch(err => {
-            console.error('Test email failed:', err);
-        });
-    }
-});
+
 
 // Register Route
 app.post('/api/register', async (req, res) => {
@@ -252,11 +223,8 @@ const forgotPasswordLimiter = rateLimit({
 app.post('/api/forgot-password', forgotPasswordLimiter, async (req, res) => {
     try {
         const { email } = req.body;
-        console.log('Forgot password request for email:', email);
-        
         const user = await User.findOne({ email });
         if (!user) {
-            console.log('User not found for email:', email);
             return res.json({ 
                 success: true, 
                 message: 'If this email exists, you will receive reset instructions.' 
@@ -268,20 +236,12 @@ app.post('/api/forgot-password', forgotPasswordLimiter, async (req, res) => {
         const expires = new Date();
         expires.setHours(expires.getHours() + 1);
 
-        console.log('Creating reset token:', {
-            userId: user._id,
-            token: resetToken,
-            expires: expires
-        });
-
         // Store token in database
-        const savedToken = await ResetToken.create({
+        await ResetToken.create({
             userId: user._id,
             token: resetToken,
             expires: expires
         });
-
-        console.log('Saved token:', savedToken);
 
         // Create reset URL
         const resetUrl = `${process.env.SITE_URL || 'http://localhost:3000'}/reset-password.html?token=${resetToken}`;
@@ -334,8 +294,6 @@ app.post('/api/reset-password', async (req, res) => {
     try {
         const { token, newPassword } = req.body;
         
-        console.log('Reset password attempt with token:', token);
-
         // Find valid token
         const resetToken = await ResetToken.findOne({
             token: token,
@@ -343,11 +301,7 @@ app.post('/api/reset-password', async (req, res) => {
             used: false
         });
 
-        console.log('Current time:', new Date());
-        console.log('Found reset token:', resetToken);
-
         if (!resetToken) {
-            console.log('Token validation failed. Token either expired, used, or not found.');
             return res.status(400).json({ 
                 success: false, 
                 message: 'Invalid or expired reset token.' 
@@ -387,31 +341,7 @@ app.post('/api/reset-password', async (req, res) => {
     }
 });
 
-// Serve dashboard
-app.get('/dashboard/*', (req, res) => {
-    res.sendFile(path.join(__dirname, 'dashboard', 'index.html'));
-});
 
-// Add this route for testing (remove in production)
-app.get('/test-email', async (req, res) => {
-    try {
-        await sendEmail(
-            'your-test-email@example.com',
-            'Test Email from VIT Connect',
-            `
-            <div style="font-family: Arial, sans-serif; padding: 20px;">
-                <h2 style="color: #6200ea;">Test Email</h2>
-                <p>This is a test email from VIT Connect.</p>
-                <p>If you receive this, the email configuration is working correctly.</p>
-            </div>
-            `
-        );
-        res.json({ success: true, message: 'Test email sent successfully' });
-    } catch (error) {
-        console.error('Test email failed:', error);
-        res.json({ success: false, message: 'Failed to send test email', error: error.message });
-    }
-});
 
 // Add this new route to fetch Gmail profile
 app.get('/api/user-profile', async (req, res) => {
@@ -519,26 +449,7 @@ app.post('/api/chat', async (req, res) => {
     }
 });
 
-// Add this test endpoint
-app.get('/api/test-ai', async (req, res) => {
-    try {
-        if (!process.env.GEMINI_API_KEY) {
-            return res.status(500).json({ 
-                error: 'API key not found', 
-                envVars: Object.keys(process.env) 
-            });
-        }
-        
-        const result = await model.generateContent('Hello, are you working?');
-        const response = await result.response;
-        res.json({ success: true, response: response.text() });
-    } catch (error) {
-        res.status(500).json({ 
-            error: error.message, 
-            stack: error.stack 
-        });
-    }
-});
+
 
 // Add this route
 app.post('/api/google-login', async (req, res) => {
@@ -608,8 +519,6 @@ app.post('/api/google-login', async (req, res) => {
 app.post('/api/change-password', async (req, res) => {
     try {
         const { email, currentPassword, newPassword } = req.body;
-        console.log('Password change request received for:', email); // Debug log
-        
         // Find user
         const user = await User.findOne({ email });
         if (!user) {
@@ -669,6 +578,86 @@ app.post('/api/update-activity', async (req, res) => {
             success: false, 
             message: 'Failed to update activity status' 
         });
+    }
+});
+
+// ========== COMMUNITY FORUM API ==========
+
+// Get all posts (newest first)
+app.get('/api/posts', async (req, res) => {
+    try {
+        const posts = await Post.find().sort({ createdAt: -1 }).limit(100);
+        res.json({ success: true, posts });
+    } catch (error) {
+        console.error('Fetch posts error:', error);
+        res.status(500).json({ success: false, message: 'Failed to fetch posts' });
+    }
+});
+
+// Create a new post
+app.post('/api/posts', async (req, res) => {
+    try {
+        const { author, authorEmail, authorPic, content, category } = req.body;
+        if (!content || !authorEmail) {
+            return res.status(400).json({ success: false, message: 'Content and email are required' });
+        }
+        const post = await Post.create({ author, authorEmail, authorPic, content, category: category || 'General' });
+        res.json({ success: true, post });
+    } catch (error) {
+        console.error('Create post error:', error);
+        res.status(500).json({ success: false, message: 'Failed to create post' });
+    }
+});
+
+// Like / unlike a post
+app.post('/api/posts/:id/like', async (req, res) => {
+    try {
+        const { email } = req.body;
+        const post = await Post.findById(req.params.id);
+        if (!post) return res.status(404).json({ success: false, message: 'Post not found' });
+
+        const idx = post.likes.indexOf(email);
+        if (idx === -1) post.likes.push(email);
+        else post.likes.splice(idx, 1);
+        await post.save();
+        res.json({ success: true, likes: post.likes });
+    } catch (error) {
+        console.error('Like post error:', error);
+        res.status(500).json({ success: false, message: 'Failed to like post' });
+    }
+});
+
+// Add a comment to a post
+app.post('/api/posts/:id/comment', async (req, res) => {
+    try {
+        const { author, authorEmail, authorPic, text } = req.body;
+        if (!text || !authorEmail) {
+            return res.status(400).json({ success: false, message: 'Comment text and email are required' });
+        }
+        const post = await Post.findById(req.params.id);
+        if (!post) return res.status(404).json({ success: false, message: 'Post not found' });
+
+        post.comments.push({ author, authorEmail, authorPic, text });
+        await post.save();
+        res.json({ success: true, comments: post.comments });
+    } catch (error) {
+        console.error('Comment error:', error);
+        res.status(500).json({ success: false, message: 'Failed to add comment' });
+    }
+});
+
+// Delete a post (only author can delete)
+app.delete('/api/posts/:id', async (req, res) => {
+    try {
+        const { email } = req.body;
+        const post = await Post.findById(req.params.id);
+        if (!post) return res.status(404).json({ success: false, message: 'Post not found' });
+        if (post.authorEmail !== email) return res.status(403).json({ success: false, message: 'Unauthorized' });
+        await Post.findByIdAndDelete(req.params.id);
+        res.json({ success: true });
+    } catch (error) {
+        console.error('Delete post error:', error);
+        res.status(500).json({ success: false, message: 'Failed to delete post' });
     }
 });
 

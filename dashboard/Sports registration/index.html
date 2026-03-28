@@ -3,38 +3,79 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sports Facilities Registration</title>
-    <link rel="stylesheet" type="text/css" href="styles.css">
-    <!-- Updated QR code library to local version -->
+    <title>Sports Facilities - VITConnect</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="/transitions.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
 </head>
 <body>
-    <h1>Sports Facilities Registration</h1>
-    <div id="facilities-container"></div>
 
-    <!-- Payment Modal with QR -->
+    <div class="main-content">
+        <!-- Page Header -->
+        <div class="page-header">
+            <div class="header-icon"><i class="fas fa-trophy"></i></div>
+            <h1>Sports Facilities</h1>
+            <p>Register for premium sports & fitness facilities</p>
+        </div>
+
+        <!-- Search & Filter -->
+        <div class="controls-bar">
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" id="searchInput" placeholder="Search facilities..." oninput="filterFacilities()">
+            </div>
+            <div class="filter-tabs">
+                <button class="filter-btn active" data-category="all" onclick="setFilter('all', this)">All</button>
+                <button class="filter-btn" data-category="gym" onclick="setFilter('gym', this)"><i class="fas fa-dumbbell"></i> Gym</button>
+                <button class="filter-btn" data-category="aquatic" onclick="setFilter('aquatic', this)"><i class="fas fa-water"></i> Aquatic</button>
+                <button class="filter-btn" data-category="racquet" onclick="setFilter('racquet', this)"><i class="fas fa-table-tennis-paddle-ball"></i> Racquet</button>
+                <button class="filter-btn" data-category="other" onclick="setFilter('other', this)"><i class="fas fa-star"></i> Other</button>
+            </div>
+        </div>
+
+        <!-- Facilities Grid -->
+        <div id="facilities-container"></div>
+
+        <!-- Empty State -->
+        <div id="emptyState" class="empty-state" style="display:none;">
+            <i class="fas fa-search"></i>
+            <p>No facilities match your search</p>
+        </div>
+    </div>
+
+    <!-- Payment Modal -->
     <div id="paymentModal" class="modal">
         <div class="modal-content">
-            <h2>Scan QR Code to Pay</h2>
+            <div class="modal-header">
+                <h2><i class="fas fa-qrcode"></i> Scan to Pay</h2>
+                <button class="modal-close" onclick="closePaymentModal()"><i class="fas fa-times"></i></button>
+            </div>
             <div id="qrcode"></div>
-            <p class="amount-text">Amount to pay: ₹<span id="paymentAmount">0</span>/-</p>
+            <p class="amount-text">Amount: ₹<span id="paymentAmount">0</span>/-</p>
             <p class="scan-instruction">Scan with your phone's camera</p>
             <div class="test-buttons">
-                <button onclick="simulatePayment(true)" class="success-btn">Test Success</button>
-                <button onclick="simulatePayment(false)" class="failure-btn">Test Failure</button>
+                <button onclick="simulatePayment(true)" class="success-btn"><i class="fas fa-check"></i> Accept Payment</button>
+                <button onclick="simulatePayment(false)" class="failure-btn"><i class="fas fa-times"></i> Reject Payment</button>
             </div>
-            <button onclick="closePaymentModal()" class="cancel-btn">Cancel</button>
+            <button onclick="closePaymentModal()" class="cancel-btn"><i class="fas fa-arrow-left"></i> Cancel</button>
         </div>
     </div>
 
     <!-- Receipt Modal -->
     <div id="receiptModal" class="modal">
-        <div class="modal-content">
+        <div class="modal-content receipt-modal">
             <div id="receiptContent"></div>
-            <button onclick="closeModal()" class="register-btn">Close</button>
         </div>
     </div>
 
+    <!-- Back Button -->
+    <div class="back-button">
+        <a href="../index.html"><i class="fas fa-arrow-left"></i> Dashboard</a>
+    </div>
+
+    <script src="/transitions.js"></script>
     <script src="script.js"></script>
 </body>
 </html> 

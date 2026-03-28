@@ -1,8 +1,11 @@
 /* General Styles */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
 body {
     margin: 0;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: #f5f7fa;
+    font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #0a0e1a;
+    color: #e2e8f0;
 }
 
 .front-page {
@@ -19,10 +22,10 @@ body {
 }
 
 .overlay {
-    background-color:transparent;
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(6px);
     padding: 40px;
-    border-radius: 15px;
-  
+    border-radius: 20px;
 }
 
 .hostel-options {
@@ -33,37 +36,39 @@ body {
 }
 
 .hostel-btn {
-    background: linear-gradient(135deg, #0055a5 0%, #003366 100%);
+    background: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%);
     color: white;
     padding: 15px 35px;
     border: none;
-    border-radius: 8px;
+    border-radius: 14px;
     text-decoration: none;
-    font-size: 18px;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    font-size: 16px;
+    font-weight: 600;
+    transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 6px 20px rgba(139, 92, 246, 0.3);
 }
 
 .hostel-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
-    background: linear-gradient(135deg, #003366 0%, #0055a5 100%);
+    transform: translateY(-4px);
+    box-shadow: 0 10px 30px rgba(139, 92, 246, 0.45);
+    background: linear-gradient(135deg, #7c3aed 0%, #8b5cf6 100%);
 }
 
 /* Hostel Page */
 .main-container {
     display: flex;
     height: 100vh;
-    background: #ffffff;
+    background: #0a0e1a;
 }
 
 .side-panel {
     width: 280px;
-    background: linear-gradient(180deg, #003366 0%, #002244 100%);
+    background: linear-gradient(180deg, #0e1225 0%, #060911 100%);
     color: white;
     padding: 25px;
     overflow-y: auto;
-    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 4px 0 25px rgba(0, 0, 0, 0.3);
+    border-right: 1px solid rgba(255,255,255,0.04);
 }
 
 .side-panel h2 {
@@ -84,49 +89,53 @@ body {
 
 .side-panel ul li a {
     text-decoration: none;
-    color: white;
-    background: rgba(255, 255, 255, 0.1);
+    color: #cbd5e1;
+    background: rgba(255, 255, 255, 0.05);
     padding: 12px 15px;
     display: block;
     text-align: center;
-    border-radius: 8px;
-    transition: all 0.3s ease;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    font-size: 14px;
 }
 
 .side-panel ul li a:hover {
-    background: rgba(255, 255, 255, 0.2);
+    background: rgba(139, 92, 246, 0.12);
+    border-color: rgba(139, 92, 246, 0.25);
     transform: translateX(5px);
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    color: white;
 }
 
 .main-content {
     flex: 1;
     padding: 30px;
     overflow-y: auto;
-    background: #f8f9fa;
+    background: #0f1320;
 }
 
 .block-details {
-    background: white;
+    background: rgba(255, 255, 255, 0.04);
     padding: 30px;
-    border-radius: 15px;
-    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+    border-radius: 18px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255,255,255,0.06);
 }
 
 .block-details h2 {
-    color: #003366;
+    color: #c4b5fd;
     margin-bottom: 25px;
-    font-size: 2em;
+    font-size: 1.8em;
 }
 
 .block-details img {
     width: 90%;
     max-width: 800px;
-    border-radius: 12px;
+    border-radius: 14px;
     margin: 20px 0;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+    transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .block-details img:hover {
@@ -136,9 +145,10 @@ body {
 .room-details {
     margin-top: 30px;
     padding: 25px;
-    background: #f8f9fa;
-    border-radius: 12px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    background: rgba(255,255,255,0.03);
+    border-radius: 14px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255,255,255,0.05);
 }
 
 .room-images {
@@ -149,18 +159,19 @@ body {
 
 .image-container {
     flex: 1;
-    background: #f5f5f5;
-    border-radius: 12px;
+    background: rgba(255,255,255,0.03);
+    border-radius: 14px;
     padding: 15px;
     text-align: center;
     height: 300px;
     display: flex;
     flex-direction: column;
+    border: 1px solid rgba(255,255,255,0.05);
 }
 
 .image-container h4 {
     margin: 0 0 10px 0;
-    color: #003366;
+    color: #c4b5fd;
 }
 
 .image-container img {
@@ -190,8 +201,8 @@ body {
 }
 
 .facility-badge {
-    background: rgba(0, 51, 102, 0.1);
-    color: #003366;
+    background: rgba(139, 92, 246, 0.12);
+    color: #c4b5fd;
     padding: 5px 12px;
     border-radius: 15px;
     font-size: 0.9em;
@@ -202,12 +213,13 @@ body {
     width: 100%;
     height: 400px;
     overflow: hidden;
-    border-radius: 15px;
+    border-radius: 16px;
     margin-bottom: 20px;
-    background: #f5f5f5;
+    background: rgba(255,255,255,0.03);
     display: flex;
     align-items: center;
     justify-content: center;
+    border: 1px solid rgba(255,255,255,0.05);
 }
 
 .block-image {
@@ -225,52 +237,57 @@ body {
 }
 
 .room-card {
-    background: white;
-    border-radius: 12px;
+    background: rgba(255,255,255,0.04);
+    border-radius: 14px;
     overflow: hidden;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+    transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
     cursor: pointer;
     display: flex;
     flex-direction: column;
+    border: 1px solid rgba(255,255,255,0.06);
 }
 
 .room-card:hover {
-    transform: translateY(-5px);
+    transform: translateY(-6px);
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.4);
+    border-color: rgba(139, 92, 246, 0.2);
 }
 
 .room-card img {
     width: 100%;
     height: 200px;
     object-fit: contain;
-    background: #f5f5f5;
+    background: rgba(255,255,255,0.03);
     padding: 10px;
 }
 
 .room-card h3 {
     padding: 15px;
     margin: 0;
-    color: #003366;
+    color: #e2e8f0;
 }
 
 .price {
     padding: 0 15px;
-    color: #084c93;
+    color: #a78bfa;
     font-weight: 600;
 }
 
 .view-details-btn {
     width: 100%;
     padding: 12px;
-    background: #003366;
+    background: linear-gradient(135deg, #8b5cf6, #6d28d9);
     color: white;
     border: none;
     cursor: pointer;
-    transition: background 0.3s ease;
+    transition: all 0.3s ease;
+    font-weight: 600;
+    font-size: 14px;
 }
 
 .view-details-btn:hover {
-    background: #084c93;
+    background: linear-gradient(135deg, #7c3aed, #8b5cf6);
 }
 
 .room-content {
@@ -287,8 +304,8 @@ body {
 }
 
 .feature-item {
-    background: rgba(8, 76, 147, 0.1);
-    color: #084c93;
+    background: rgba(139, 92, 246, 0.12);
+    color: #c4b5fd;
     padding: 5px 12px;
     border-radius: 15px;
     font-size: 0.9em;
@@ -297,8 +314,9 @@ body {
 .price-tag {
     margin-top: 20px;
     padding: 15px;
-    background: rgba(8, 76, 147, 0.05);
-    border-radius: 8px;
+    background: rgba(139, 92, 246, 0.06);
+    border-radius: 10px;
+    border: 1px solid rgba(139, 92, 246, 0.1);
 }
 
 /* Responsive adjustments */

@@ -5,14 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VIConnect - Hostels</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="/transitions.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="/transitions.js" defer></script>
 </head>
 <body class="front-page">
+    <div class="back-button" style="position:fixed;bottom:20px;left:20px;z-index:1000;">
+        <a href="/dashboard" style="display:flex;align-items:center;gap:8px;padding:10px 20px;background:rgba(139,92,246,0.75);color:#fff;text-decoration:none;border-radius:12px;font-size:13px;font-weight:500;backdrop-filter:blur(10px);box-shadow:0 4px 14px rgba(139,92,246,0.25);transition:all .3s ease;font-family:Inter,sans-serif;">
+            <i class="fas fa-chevron-left"></i> Dashboard
+        </a>
+    </div>
     <div class="overlay">
         <h1>Welcome to VIConnect Hostels</h1>
         <p>Select your hostel type</p>
         <div class="hostel-options">
-            <a href="hostels.html?type=boys" class="hostel-btn">Boys' Hostel</a>
-            <a href="hostels.html?type=girls" class="hostel-btn">Girls' Hostel</a>
+            <a href="hostels.html?type=boys" class="hostel-btn"><i class="fas fa-male" style="margin-right:8px;"></i>Boys' Hostel</a>
+            <a href="hostels.html?type=girls" class="hostel-btn"><i class="fas fa-female" style="margin-right:8px;"></i>Girls' Hostel</a>
         </div>
     </div>
 </body>

@@ -1,12 +1,36 @@
+// Use a suggested prompt
+function useSuggestion(text) {
+    document.getElementById('userInput').value = text;
+    sendMessage();
+}
+
+// Get formatted time
+function getTimeString() {
+    return new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+}
+
+// Copy message text
+function copyMessage(btn) {
+    const msgEl = btn.closest('.message').querySelector('pre') || btn.closest('.message');
+    const text = msgEl.textContent.replace('Copy', '').trim();
+    navigator.clipboard.writeText(text).then(() => {
+        btn.innerHTML = '<i class="fas fa-check"></i>';
+        setTimeout(() => { btn.innerHTML = '<i class="fas fa-copy"></i>'; }, 1500);
+    });
+}
+
 async function sendMessage() {
     const userInput = document.getElementById("userInput").value.trim();
     if (userInput === "") return;
 
+    // Hide welcome container
+    const welcome = document.getElementById("welcomeContainer");
+    if (welcome) welcome.style.display = 'none';
+
     const inputField = document.getElementById("userInput");
-    const sendButton = document.querySelector("button");
+    const sendButton = document.getElementById("sendBtn");
     
     try {
-        // Disable controls
         inputField.disabled = true;
         sendButton.disabled = true;
 
@@ -16,14 +40,7 @@ async function sendMessage() {
 
         // Show loading animation
         const loadingDiv = appendMessage('', 'bot-message loading-message');
-        const loadingText = document.createElement('span');
-        loadingText.innerText = 'Thinking';
-        const dots = document.createElement('span');
-        dots.innerText = '...';
-        loadingDiv.appendChild(loadingText);
-        loadingDiv.appendChild(dots);
-        
-        console.log('Sending message:', userInput);
+        loadingDiv.innerHTML = '<div class="typing-indicator"><span></span><span></span><span></span></div>';
         
         const response = await fetch('http://localhost:3000/api/chat', {
             method: 'POST',
@@ -34,22 +51,23 @@ async function sendMessage() {
             body: JSON.stringify({ message: userInput })
         });
 
-        console.log('Response status:', response.status);
         const responseData = await response.json();
-        console.log('Raw response:', responseData);
 
         try {
-            // Remove loading message
             loadingDiv.remove();
 
-            // Create and append bot message
             const botMessageDiv = appendMessage('', 'bot-message');
             
-            // Use pre element to preserve formatting
+            // Add copy button
+            const copyBtn = document.createElement('button');
+            copyBtn.className = 'copy-btn';
+            copyBtn.innerHTML = '<i class="fas fa-copy"></i>';
+            copyBtn.onclick = function() { copyMessage(this); };
+            botMessageDiv.appendChild(copyBtn);
+
             const preElement = document.createElement('pre');
             botMessageDiv.appendChild(preElement);
             
-            // Display the response message
             await typeMessage(preElement, responseData.response, 30);
 
         } catch (error) {
@@ -59,9 +77,8 @@ async function sendMessage() {
 
     } catch (error) {
         console.error("Error details:", error);
-        const errorDiv = appendMessage('Connection error. Please try again.', 'bot-message error-message');
-        errorDiv.innerHTML += '<br><small>Click to dismiss</small>';
-        errorDiv.onclick = () => errorDiv.remove();
+        const errorDiv = appendMessage('', 'bot-message error-message');
+        errorDiv.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Connection error. Please try again.';
     } finally {
         inputField.disabled = false;
         sendButton.disabled = false;
@@ -75,6 +92,13 @@ function appendMessage(text, className) {
     const classes = className.split(' ');
     messageDiv.classList.add('message', ...classes);
     messageDiv.innerText = text;
+
+    // Add timestamp
+    const timeSpan = document.createElement('span');
+    timeSpan.className = 'msg-time';
+    timeSpan.textContent = getTimeString();
+    messageDiv.appendChild(timeSpan);
+
     chatBox.appendChild(messageDiv);
     chatBox.scrollTop = chatBox.scrollHeight;
     return messageDiv;
@@ -88,7 +112,6 @@ document.getElementById("userInput").addEventListener("keypress", (e) => {
 });
 
 function typeMessage(element, text, speed = 30) {
-    // Split text into individual lines
     const lines = text.split('\n');
     let lineIndex = 0;
     element.textContent = '';
@@ -96,16 +119,12 @@ function typeMessage(element, text, speed = 30) {
     return new Promise(resolve => {
         function typeLine() {
             if (lineIndex < lines.length) {
-                // Add the current line
-                if (lines[lineIndex].trim() !== '') {  // Only add non-empty lines
+                if (lines[lineIndex].trim() !== '') {
                     element.textContent += lines[lineIndex] + '\n';
                 }
                 lineIndex++;
-                
-                // Scroll to the bottom after each line
                 const chatBox = document.getElementById("chatBox");
                 chatBox.scrollTop = chatBox.scrollHeight;
-                
                 setTimeout(typeLine, speed);
             } else {
                 resolve();

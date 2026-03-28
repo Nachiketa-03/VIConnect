@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Community Forum - VIConnect</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="/transitions.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+    <!-- Top Bar -->
+    <div class="top-bar">
+        <div class="top-bar-left">
+            <a class="back-btn" href="/dashboard/index.html">
+                <i class="fas fa-arrow-left"></i> Dashboard
+            </a>
+            <h1 class="page-title"><i class="fas fa-comments"></i> Community Forum</h1>
+        </div>
+        <div class="top-bar-right">
+            <select class="category-filter" id="categoryFilter">
+                <option value="all">All Categories</option>
+                <option value="General">General</option>
+                <option value="Academic">Academic</option>
+                <option value="Events">Events</option>
+                <option value="Clubs">Clubs</option>
+                <option value="Help">Help</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Create Post -->
+        <div class="create-post" id="createPost">
+            <div class="create-post-header">
+                <img id="currentUserPic" src="" alt="You">
+                <span id="currentUserName">Loading...</span>
+            </div>
+            <textarea id="postContent" placeholder="What's on your mind? Share with the community..." maxlength="2000"></textarea>
+            <div class="create-post-actions">
+                <select class="category-select" id="postCategory">
+                    <option value="General">General</option>
+                    <option value="Academic">Academic</option>
+                    <option value="Events">Events</option>
+                    <option value="Clubs">Clubs</option>
+                    <option value="Help">Help</option>
+                </select>
+                <button class="post-btn" id="postBtn" onclick="createPost()">
+                    <i class="fas fa-paper-plane"></i> Post
+                </button>
+            </div>
+        </div>
+
+        <!-- Feed -->
+        <div class="feed" id="feed">
+            <div class="loading"><i class="fas fa-spinner"></i><p>Loading posts...</p></div>
+        </div>
+    </div>
+
+    <script src="/transitions.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

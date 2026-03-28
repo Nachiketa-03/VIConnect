@@ -11,7 +11,7 @@ const locations = [
     { name: "Women's Hostel Block  A & B", lat: 12.968273263924143, lng: 79.15846586095512 },
     { name: "VIT Lawn", lat: 12.9725, lng: 79.1604 },
     { name: "Foody", lat: 12.969532835054125, lng: 79.15834889561786,
-      description: "Popular food court near Men's Hostel" },, 
+      description: "Popular food court near Men's Hostel" },
     { name: "Kalpana Chawla Ground", lat: 12.968601432489303, lng: 79.15666276678166,
       description: "Recreational area and Park to hangout" },
     { name: "DC (Darling Canteen)", lat: 12.969706, lng: 79.154975,

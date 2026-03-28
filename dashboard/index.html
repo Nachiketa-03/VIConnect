@@ -3,20 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VIConnect</title>
+    <title>VIConnect - Dashboard</title>
     <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="/transitions.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-material-ui/material-ui.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <script src="script.js" defer></script> 
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <!-- Add hamburger button -->
+    <!-- Hamburger button -->
     <button class="hamburger-btn" onclick="togglePanel()">
         <i class="fas fa-bars"></i>
     </button>
 
-    <!-- Update side panel class -->
+    <!-- Side Panel -->
     <div class="side-panel collapsed" id="sidePanel">
         <div class="user-profile">
             <div class="profile-pic">
@@ -24,8 +24,7 @@
                     <img src="default-avatar.png" alt="Profile Picture" id="profilePic">
                     <div class="edit-overlay">
                         <label for="profileUpload">
-                            <i class="fas fa-edit"></i>
-                            <span>Edit</span>
+                            <i class="fas fa-camera"></i>
                         </label>
                         <input type="file" id="profileUpload" accept="image/*" style="display: none;">
                     </div>
@@ -40,24 +39,24 @@
                 <span>AI ChatBot</span>
             </a>
             <a href="#" class="nav-item" onclick="openHostel()">
-                <i class="fas fa-home"></i>
-                <span>Hostel and Mess</span>
+                <i class="fas fa-building"></i>
+                <span>Hostel & Mess</span>
             </a>
             <a href="#" class="nav-item" onclick="openCgpaCalculator()">
                 <i class="fas fa-calculator"></i>
                 <span>CGPA Calculator</span>
             </a>
             <a href="#" class="nav-item" onclick="openmap()">
-                <i class="fas fa-map-marker-alt"></i>
-                <span>Navigation</span>
+                <i class="fas fa-map-marked-alt"></i>
+                <span>Campus Map</span>
             </a>
             <a href="#" class="nav-item" onclick="showSection('community')">
                 <i class="fas fa-users"></i>
                 <span>Community</span>
             </a>
             <a href="#" class="nav-item" onclick="playo()">
-                <i class="fas fa-running"></i>
-                <span>Sports Registration</span>
+                <i class="fas fa-table-tennis-paddle-ball"></i>
+                <span>Sports</span>
             </a>
             <a href="#" class="nav-item theme-toggle" onclick="toggleTheme(event)">
                 <i class="fas fa-moon dark-icon"></i>
@@ -65,78 +64,149 @@
                 <span>Dark Mode</span>
             </a>
             <a href="#" class="nav-item" onclick="openSettings()">
-                <i class="fas fa-cog"></i>
+                <i class="fas fa-gear"></i>
                 <span>Settings</span>
             </a>
         </nav>
 
         <div class="logout-section">
             <a href="#" class="logout-btn" onclick="confirmLogout(event)">
-                <i class="fas fa-sign-out-alt"></i>
+                <i class="fas fa-right-from-bracket"></i>
                 <span>Logout</span>
             </a>
         </div>
     </div>
 
-    <!-- Modified Container -->
+    <!-- Main Content -->
     <div class="main-content">
-        <div class="container">
-            <!-- Remove the header and logout button as they're now in side panel -->
-            <div class="grid">
-                <div class="card" id="chatbot" data-sound="click2" onclick="openChatbot()">
-                    <div class="inner-box">
-                        <div class="image">
-                            <img src="chatbot.png" alt="AI ChatBot">
-                        </div>
-                    </div>
-                    <p>AI ChatBot</p>
+        <!-- Welcome Header -->
+        <div class="welcome-header">
+            <div class="welcome-text">
+                <h1 id="greetingText">Good Morning</h1>
+                <p id="welcomeSubtext">Welcome back! Here's your campus overview.</p>
+            </div>
+            <div class="header-actions">
+                <div class="date-display">
+                    <i class="fas fa-calendar-alt"></i>
+                    <span id="currentDate"></span>
                 </div>
-                <div class="card" id="hostel" data-sound="click2" onclick="openHostel()">
-                    <div class="inner-box">
-                        <div class="image">
-                            <img src="hostel.jpg" alt="Hostel and Mess">
-                        </div>
-                    </div>
-                    <p>Hostel and Mess</p>
+            </div>
+        </div>
+
+        <!-- Quick Stats -->
+        <div class="stats-row">
+            <div class="stat-card">
+                <div class="stat-icon" style="background: linear-gradient(135deg, #667eea, #764ba2);">
+                    <i class="fas fa-robot"></i>
                 </div>
-                <div class="card" id="cgpa" data-sound="click2" onclick="openCgpaCalculator()">
-                    <div class="inner-box">
-                        <div class="image">
-                            <img src="CGPA.jpg" alt="CGPA Calculator">
-                        </div>
-                    </div>
-                    <p>CGPA Calculator</p>
+                <div class="stat-info">
+                    <span class="stat-label">AI Assistant</span>
+                    <span class="stat-value">Online</span>
                 </div>
-                <div class="card" id="navigation" data-sound="click2" onclick="openmap()">
-                    <div class="inner-box">
-                        <div class="image">
-                            <img src="navigation.jpg" alt="Navigation">
-                        </div>
-                    </div>
-                    <p>Navigation</p>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon" style="background: linear-gradient(135deg, #f093fb, #f5576c);">
+                    <i class="fas fa-building"></i>
                 </div>
-                <div class="card" id="playo" data-sound="click2" onclick="playo()">
-                    <div class="inner-box">
-                        <div class="image">
-                            <img src="playo.jpeg" alt="PlayO">
-                        </div>
-                    </div>
-                    <p>PlayO</p>
+                <div class="stat-info">
+                    <span class="stat-label">Hostels</span>
+                    <span class="stat-value">26 Blocks</span>
                 </div>
-                <div class="card" id="community" data-sound="click2">
-                    <div class="inner-box">
-                        <div class="image">
-                            <img src="community.jpg" alt="Community">
-                        </div>
-                    </div>
-                    <p>Community</p>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon" style="background: linear-gradient(135deg, #4facfe, #00f2fe);">
+                    <i class="fas fa-trophy"></i>
+                </div>
+                <div class="stat-info">
+                    <span class="stat-label">Sports</span>
+                    <span class="stat-value">12 Activities</span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon" style="background: linear-gradient(135deg, #43e97b, #38f9d7);">
+                    <i class="fas fa-map-pin"></i>
+                </div>
+                <div class="stat-info">
+                    <span class="stat-label">Locations</span>
+                    <span class="stat-value">9 Places</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Feature Cards Grid -->
+        <h2 class="section-title"><i class="fas fa-th-large"></i> Quick Access</h2>
+        <div class="grid">
+            <div class="card" onclick="openChatbot()">
+                <div class="card-gradient" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                    <img src="https://images.unsplash.com/photo-1677442136019-21780ecad995?w=400&h=200&fit=crop&q=80" alt="AI ChatBot">
+                </div>
+                <div class="card-content">
+                    <div class="card-icon"><i class="fas fa-robot"></i></div>
+                    <h3>AI ChatBot</h3>
+                    <p>Get instant answers to your campus queries with AI assistance</p>
+                    <span class="card-action">Chat Now <i class="fas fa-arrow-right"></i></span>
+                </div>
+            </div>
+            <div class="card" onclick="openHostel()">
+                <div class="card-gradient" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                    <img src="https://images.unsplash.com/photo-1555854877-bab0e564b8d5?w=400&h=200&fit=crop&q=80" alt="Hostel">
+                </div>
+                <div class="card-content">
+                    <div class="card-icon"><i class="fas fa-building"></i></div>
+                    <h3>Hostel & Mess</h3>
+                    <p>Explore hostel blocks, room types, and mess facilities</p>
+                    <span class="card-action">Explore <i class="fas fa-arrow-right"></i></span>
+                </div>
+            </div>
+            <div class="card" onclick="openCgpaCalculator()">
+                <div class="card-gradient" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+                    <img src="https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=400&h=200&fit=crop&q=80" alt="Study">
+                </div>
+                <div class="card-content">
+                    <div class="card-icon"><i class="fas fa-calculator"></i></div>
+                    <h3>CGPA Calculator</h3>
+                    <p>Calculate your cumulative GPA and track academic progress</p>
+                    <span class="card-action">Calculate <i class="fas fa-arrow-right"></i></span>
+                </div>
+            </div>
+            <div class="card" onclick="openmap()">
+                <div class="card-gradient" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);">
+                    <img src="https://images.unsplash.com/photo-1562774053-701939374585?w=400&h=200&fit=crop&q=80" alt="Campus">
+                </div>
+                <div class="card-content">
+                    <div class="card-icon"><i class="fas fa-map-marked-alt"></i></div>
+                    <h3>Campus Navigation</h3>
+                    <p>Navigate the campus with interactive maps and directions</p>
+                    <span class="card-action">Navigate <i class="fas fa-arrow-right"></i></span>
+                </div>
+            </div>
+            <div class="card" onclick="playo()">
+                <div class="card-gradient" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);">
+                    <img src="https://images.unsplash.com/photo-1517649763962-0c623066013b?w=400&h=200&fit=crop&q=80" alt="Sports">
+                </div>
+                <div class="card-content">
+                    <div class="card-icon"><i class="fas fa-table-tennis-paddle-ball"></i></div>
+                    <h3>Sports Registration</h3>
+                    <p>Register for gym, swimming, tennis, and more sports</p>
+                    <span class="card-action">Register <i class="fas fa-arrow-right"></i></span>
+                </div>
+            </div>
+            <div class="card" onclick="showSection('community')">
+                <div class="card-gradient" style="background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%);">
+                    <img src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=400&h=200&fit=crop&q=80" alt="Community">
+                </div>
+                <div class="card-content">
+                    <div class="card-icon"><i class="fas fa-users"></i></div>
+                    <h3>Community</h3>
+                    <p>Connect with fellow students and share campus experiences</p>
+                    <span class="card-action">Join Now <i class="fas fa-arrow-right"></i></span>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Add these scripts before closing body tag -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="/transitions.js"></script>
     <script src="script.js"></script>
 </body>
 </html>

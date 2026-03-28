@@ -66,10 +66,14 @@ async function handleGoogleCredentialResponse(response) {
             localStorage.setItem('profilePic', data.userData.profilePic);
 
             // Redirect
-            document.body.style.opacity = '0';
-            setTimeout(() => {
-                window.location.href = data.redirectPath;
-            }, 500);
+            if (window.vitNavigate) {
+                window.vitNavigate(data.redirectPath);
+            } else {
+                document.body.style.opacity = '0';
+                setTimeout(() => {
+                    window.location.href = data.redirectPath;
+                }, 500);
+            }
         } else {
             Swal.fire({
                 icon: 'error',
@@ -135,10 +139,14 @@ async function handleLogin(event) {
             });
             
             // Smooth transition
-            document.body.style.opacity = '0';
-            setTimeout(() => {
-                window.location.href = data.redirectPath;
-            }, 500);
+            if (window.vitNavigate) {
+                window.vitNavigate(data.redirectPath);
+            } else {
+                document.body.style.opacity = '0';
+                setTimeout(() => {
+                    window.location.href = data.redirectPath;
+                }, 500);
+            }
 
             // Store all user data in localStorage
             localStorage.setItem('userEmail', data.userData.email);

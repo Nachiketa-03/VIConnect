@@ -3,26 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login Page</title>
+    <title>VIConnect - Campus Life, Connected</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="/transitions.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-material-ui/material-ui.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://accounts.google.com/gsi/client" async defer></script>
     <meta name="google-signin-client_id" content="833150744015-ct1m070cei42uomjo4e0r5r2f83feush.apps.googleusercontent.com">
 </head>
 <body>
+    <!-- Animated Background Particles -->
+    <div class="particles" id="particles"></div>
+
     <div class="container">
         <div class="logo">
-            <img src="logo.png" alt="VIConnect Logo">
+            <i class="fas fa-graduation-cap logo-icon"></i>
             <h1>VIConnect</h1>
+            <p class="tagline">Campus Life, Connected</p>
         </div>
-        <div class="login-container">
-            <div class="sign-in">
-                <h2>Sign In</h2>
+        <div class="login-container" id="authContainer">
+            <!-- Sign In Panel -->
+            <div class="sign-in" id="signInPanel">
+                <h2><i class="fas fa-sign-in-alt"></i> Sign In</h2>
                 <form id="loginForm" onsubmit="handleLogin(event)">
-                    <input type="email" id="loginEmail" placeholder="Email" required>
-                    <input type="password" id="loginPassword" placeholder="Password" required>
-                    <button type="submit">Sign In</button>
-                    <div class="or">OR</div>
+                    <div class="input-group">
+                        <i class="fas fa-envelope input-icon"></i>
+                        <input type="email" id="loginEmail" placeholder="Email Address" required>
+                    </div>
+                    <div class="input-group">
+                        <i class="fas fa-lock input-icon"></i>
+                        <input type="password" id="loginPassword" placeholder="Password" required>
+                        <button type="button" class="toggle-password" onclick="togglePassword('loginPassword', this)">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                    <button type="submit" class="btn-primary">
+                        <i class="fas fa-arrow-right"></i> Sign In
+                    </button>
+                    <div class="or"><span>OR</span></div>
                     <div id="g_id_onload"
                          data-client_id="833150744015-ct1m070cei42uomjo4e0r5r2f83feush.apps.googleusercontent.com"
                          data-callback="handleGoogleCredentialResponse">
@@ -35,24 +53,122 @@
                          data-shape="rectangular"
                          data-width="280">
                     </div>
-                    <a href="#" class="forgot-password" onclick="handleForgotPassword(event)">Forget Your Password?</a>
+                    <a href="#" class="forgot-password" onclick="handleForgotPassword(event)">
+                        <i class="fas fa-key"></i> Forgot Your Password?
+                    </a>
                 </form>
             </div>
-            <div class="sign-up">
-                <h2>Hello, Friend!</h2>
-                <p>Register with your personal details to use all of site features</p>
+
+            <!-- Sign Up Panel -->
+            <div class="sign-up" id="signUpPanel">
+                <h2><i class="fas fa-user-plus"></i> Create Account</h2>
+                <p>Join the VIConnect community today</p>
                 <form onsubmit="handleRegister(event)">
-                    <input type="text" placeholder="Username" name="username" required>
-                    <input type="email" placeholder="Email" name="email" required>
-                    <input type="password" placeholder="Password" name="password" required>
-                    <input type="password" placeholder="Confirm Password" required>
-                    <button type="submit">Sign Up</button>
+                    <div class="input-group light">
+                        <i class="fas fa-user input-icon"></i>
+                        <input type="text" placeholder="Username" name="username" required>
+                    </div>
+                    <div class="input-group light">
+                        <i class="fas fa-envelope input-icon"></i>
+                        <input type="email" placeholder="Email Address" name="email" required>
+                    </div>
+                    <div class="input-group light">
+                        <i class="fas fa-lock input-icon"></i>
+                        <input type="password" placeholder="Password" name="password" id="regPassword" required oninput="checkPasswordStrength(this.value)">
+                        <button type="button" class="toggle-password light" onclick="togglePassword('regPassword', this)">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                    <div class="password-strength" id="passwordStrength">
+                        <div class="strength-bar" id="strengthBar"></div>
+                    </div>
+                    <small class="strength-text" id="strengthText"></small>
+                    <div class="input-group light">
+                        <i class="fas fa-check-circle input-icon"></i>
+                        <input type="password" placeholder="Confirm Password" id="confirmRegPassword" required>
+                        <button type="button" class="toggle-password light" onclick="togglePassword('confirmRegPassword', this)">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                    <button type="submit" class="btn-secondary">
+                        <i class="fas fa-rocket"></i> Sign Up
+                    </button>
                 </form>
             </div>
         </div>
+
+        <!-- Mobile toggle -->
+        <div class="mobile-toggle">
+            <p id="toggleText">Don't have an account?</p>
+            <button onclick="toggleAuthMode()" id="toggleBtn" class="btn-toggle">Sign Up</button>
+        </div>
     </div>
+
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     <script src="js/auth.js"></script>
+    <script>
+        // Animated particles background
+        function createParticles() {
+            const container = document.getElementById('particles');
+            for (let i = 0; i < 50; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDuration = (Math.random() * 20 + 10) + 's';
+                particle.style.animationDelay = Math.random() * 20 + 's';
+                particle.style.width = particle.style.height = (Math.random() * 6 + 2) + 'px';
+                container.appendChild(particle);
+            }
+        }
+        createParticles();
+
+        // Password visibility toggle
+        function togglePassword(inputId, btn) {
+            const input = document.getElementById(inputId);
+            const icon = btn.querySelector('i');
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.classList.replace('fa-eye', 'fa-eye-slash');
+            } else {
+                input.type = 'password';
+                icon.classList.replace('fa-eye-slash', 'fa-eye');
+            }
+        }
+
+        // Password strength checker
+        function checkPasswordStrength(password) {
+            const bar = document.getElementById('strengthBar');
+            const text = document.getElementById('strengthText');
+            let strength = 0;
+            if (password.length >= 8) strength++;
+            if (/[a-z]/.test(password) && /[A-Z]/.test(password)) strength++;
+            if (/\d/.test(password)) strength++;
+            if (/[^a-zA-Z0-9]/.test(password)) strength++;
+            const levels = ['', 'Weak', 'Fair', 'Good', 'Strong'];
+            const colors = ['', '#ff4444', '#ffaa00', '#44bb44', '#00cc66'];
+            const widths = ['0%', '25%', '50%', '75%', '100%'];
+            bar.style.width = widths[strength];
+            bar.style.background = colors[strength];
+            text.textContent = password ? levels[strength] : '';
+            text.style.color = colors[strength];
+        }
+
+        // Mobile auth mode toggle
+        function toggleAuthMode() {
+            const container = document.getElementById('authContainer');
+            const text = document.getElementById('toggleText');
+            const btn = document.getElementById('toggleBtn');
+            container.classList.toggle('show-signup');
+            if (container.classList.contains('show-signup')) {
+                text.textContent = 'Already have an account?';
+                btn.textContent = 'Sign In';
+            } else {
+                text.textContent = "Don't have an account?";
+                btn.textContent = 'Sign Up';
+            }
+        }
+    </script>
+    <script src="/transitions.js"></script>
 </body>
 </html>
