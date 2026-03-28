@@ -509,8 +509,7 @@ app.post('/api/google-login', async (req, res) => {
         console.error('Google login error:', error);
         res.json({ 
             success: false, 
-            message: 'Google login failed',
-            error: error.message 
+            message: 'Google login failed: ' + error.message
         });
     }
 });
@@ -661,7 +660,25 @@ app.delete('/api/posts/:id', async (req, res) => {
     }
 });
 
+// Health-check endpoint — shows which env vars are configured (no values exposed)
+app.get('/api/health', (req, res) => {
+    res.json({
+        status: 'ok',
+        env: {
+            MONGODB_URI:      !!process.env.MONGODB_URI,
+            GOOGLE_CLIENT_ID: !!process.env.GOOGLE_CLIENT_ID,
+            GEMINI_API_KEY:   !!process.env.GEMINI_API_KEY,
+            EMAIL_USER:       !!process.env.EMAIL_USER,
+            EMAIL_PASS:       !!process.env.EMAIL_PASS,
+            SITE_URL:         !!process.env.SITE_URL,
+        },
+        mongoConnected: mongoose.connection.readyState === 1,
+    });
+});
+
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
-    console.log(`Visit http://localhost:${PORT} to view the application`);
+    console.log(`GOOGLE_CLIENT_ID: ${process.env.GOOGLE_CLIENT_ID ? 'SET' : 'MISSING'}`);
+    console.log(`GEMINI_API_KEY: ${process.env.GEMINI_API_KEY ? 'SET' : 'MISSING'}`);
+    console.log(`MONGODB_URI: ${process.env.MONGODB_URI ? 'SET' : 'MISSING'}`);
 });
