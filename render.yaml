@@ -1,0 +1,28 @@
+services:
+  - type: web
+    name: viconnect
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: node server.js
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: MONGODB_URI
+        sync: false
+      - key: EMAIL_USER
+        sync: false
+      - key: EMAIL_PASS
+        sync: false
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: GOOGLE_CLIENT_ID
+        sync: false
+      - key: DEVICE_NAME
+        value: Render Cloud
+      - key: LOCATION
+        value: Cloud Server
+      - key: USER_NAME
+        value: VIConnect
+      - key: SITE_URL
+        sync: false

@@ -159,7 +159,7 @@ app.post('/api/register', async (req, res) => {
                         <p style="color: #444; line-height: 1.5;">Hi ${username},</p>
                         <p style="color: #444; line-height: 1.5;">Thank you for joining VIT Connect! Your account has been successfully created.</p>
                         <div style="text-align: center; margin: 30px 0;">
-                            <a href="http://localhost:3000/dashboard" 
+                            <a href="${process.env.SITE_URL || 'http://localhost:3000'}/dashboard" 
                                style="display: inline-block; padding: 12px 24px; background-color: #6200ea; color: white; text-decoration: none; border-radius: 5px; font-weight: bold;">
                                 Get Started
                             </a>
