@@ -25,9 +25,16 @@ app.use(express.static('public'));
 app.use('/dashboard', express.static(path.join(__dirname, 'dashboard')));
 
 // MongoDB Connection
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/PROJECT1')
-    .then(() => console.log('Connected to MongoDB: PROJECT1'))
-    .catch(err => console.error('MongoDB connection error:', err));
+const mongoURI = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/PROJECT1';
+console.log('Connecting to MongoDB…', mongoURI.includes('mongodb+srv') ? 'Atlas (SRV)' : 'Local');
+mongoose.connect(mongoURI, {
+    serverSelectionTimeoutMS: 30000,   // wait up to 30 s for a server
+    socketTimeoutMS: 45000,            // close sockets after 45 s of inactivity
+    connectTimeoutMS: 30000,           // TCP connection timeout
+    retryWrites: true,
+})
+    .then(() => console.log('Connected to MongoDB ✓'))
+    .catch(err => console.error('MongoDB connection error:', err.message));
 
 // Initialize Gemini AI after MongoDB connection
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
