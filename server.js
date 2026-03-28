@@ -183,7 +183,7 @@ app.post('/api/register', async (req, res) => {
         res.json({ success: true, message: 'Registration successful!' });
     } catch (error) {
         console.error('Registration error:', error);
-        res.json({ success: false, message: 'Registration failed' });
+        res.json({ success: false, message: error.code === 11000 ? 'Email already registered' : 'Registration failed: ' + error.message });
     }
 });
 
